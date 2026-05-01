@@ -91,6 +91,10 @@ Evaluate these areas, focusing on those most relevant to the request. For clear 
 
 ### Step 6: Generate Clarifying Questions (PROACTIVE APPROACH)
    - Create `aidlc-docs/inception/requirements/requirement-verification-questions.md` only when the request has genuine ambiguity that would lead to wrong implementation direction. For clear, specific requests, proceed directly to generating the requirements document.
+   - **IMPORTANT — Per-task lifecycle**: The questions file is a per-task working artifact. It is consumed once to generate `requirements.md`; downstream stages reference `requirements.md`, not the questions file. It is therefore safe to **overwrite** it when a new task begins — no archiving, no clutter. The audit log (Step 9) holds the durable Q&A record. **Guard first** before overwriting:
+     1. Read `aidlc-state.md`. If a prior task's `requirements-questions.md` exists AND the prior task is **not marked complete** in `aidlc-state.md`: STOP. Do not overwrite. Warn the user that overwriting will lose unfinished work and ask them to choose: **Resume** the prior task, or **Restart** (explicit confirmation required, per the Restart Request recovery procedure).
+     2. Otherwise (prior task complete, or no prior file): overwrite directly with the new task's questions.
+     Regardless, all question text MUST be captured verbatim in `audit.md` (see Step 9) — `audit.md` is append-only and is the single durable historical record.
    - Ask questions about ANY missing, unclear, or ambiguous areas
    - Focus on functional requirements, non-functional requirements, user scenarios, and business context
    - Request user to fill in all [Answer]: tags directly in the questions document
@@ -126,6 +130,21 @@ Update `aidlc-docs/aidlc-state.md`:
 
 ### Step 9: Log and Proceed
    - Log approval prompt with timestamp in `aidlc-docs/audit.md`
+   - **MANDATORY — Self-contained Q&A logging**: When clarifying questions were used (Step 6), the audit entry for the answers MUST include the **full text of every question** alongside the user's answer (and any presented multiple-choice options). Do NOT log answers alone (e.g. "Q1: 4"). Reason: `requirements-questions.md` is overwritten when a new task starts, so the audit log is the only durable record of what was asked.
+   - Suggested format:
+```markdown
+## Requirements Analysis — User Answers Received
+**Timestamp**: [ISO timestamp]
+**Questions & Answers** (full Q text retained because `requirements-questions.md` is overwritten on each new task):
+
+- **Q1**: [Full question text]
+  - 1) [Option 1 text]
+  - 2) [Option 2 text]
+  - ...
+  - **Answer**: "[User's complete raw answer]"
+
+- **Q2**: ...
+```
    - Present completion message in this structure:
      1. **Completion Announcement** (mandatory): Always start with this:
 
