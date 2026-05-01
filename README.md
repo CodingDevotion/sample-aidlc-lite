@@ -103,14 +103,14 @@ upstream-fork    git@github.com:CodingDevotion/sample-aidlc-lite.git    (old pub
 - **`upstream`** — the repo where the **Lite** variant of AI-DLC is maintained (published under `aws-samples`). Note: this is *not* the canonical source of AI-DLC as a whole — the full AI-DLC methodology lives in the [blog post](https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/) and the [Method Definition Paper](https://prod.d13rzhkk8cj2z0.amplifyapp.com/). This remote is read-only; use it to pull in updates the maintainers make to the Lite rules.
 - **`upstream-fork`** — my original public fork, kept around solely as a launchpad for contributing changes back to the AWS Lite repo if I ever want to.
 
-### Pull the latest from AWS
+### Pull the latest from AWS Lite repo
 ```bash
 git fetch upstream
 git merge upstream/main          # or: git rebase upstream/main
 ```
 Resolve any conflicts (most likely in `README.md` or files you've customized), then `git push origin main`.
 
-### Contribute a change back to AWS
+### Contribute a change back to from AWS Lite repo
 Private repos can't open PRs to public ones, so route contributions through `upstream-fork`:
 ```bash
 git push upstream-fork <branch-name>
