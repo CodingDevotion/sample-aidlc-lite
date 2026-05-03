@@ -110,6 +110,9 @@ Evaluate these areas, focusing on those most relevant to the request. For clear 
    - Analyze answers. If critical ambiguity remains that would affect architecture or core functionality, ask up to 3 targeted follow-up questions in the same file. Then proceed.
 
 ### Step 7: Generate Requirements Document
+
+> **⚠️ CRITICAL — FILENAME RULE: The output MUST always be `requirements.md`. NEVER write a project-named variant such as `requirements.{project}.md` or `requirements.notes-something.md`. The archive step below is what captures history; a misnamed current file breaks session continuity.**
+
    - **MANDATORY — Archive before create**: ALWAYS follow this sequence before writing a new requirements document:
      1. If `aidlc-docs/inception/requirements/requirements.md` already exists:
         - Read the existing file, then write its contents to `aidlc-docs/inception/requirements/requirements.{prior-project-slug}.archived.md` (same slug derived in Step 6).
