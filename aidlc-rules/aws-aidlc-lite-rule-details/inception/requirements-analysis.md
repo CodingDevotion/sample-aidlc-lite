@@ -90,10 +90,14 @@ Evaluate these areas, focusing on those most relevant to the request. For clear 
 **When in doubt, ask questions** - incomplete requirements lead to poor implementations.
 
 ### Step 6: Generate Clarifying Questions (PROACTIVE APPROACH)
-   - Create `aidlc-docs/inception/requirements/requirement-verification-questions.md` only when the request has genuine ambiguity that would lead to wrong implementation direction. For clear, specific requests, proceed directly to generating the requirements document.
-   - **IMPORTANT — Per-task lifecycle**: The questions file is a per-task working artifact. It is consumed once to generate `requirements.md`; downstream stages reference `requirements.md`, not the questions file. It is therefore safe to **overwrite** it when a new task begins — no archiving, no clutter. The audit log (Step 9) holds the durable Q&A record. **Guard first** before overwriting:
-     1. Read `aidlc-state.md`. If a prior task's `requirements-questions.md` exists AND the prior task is **not marked complete** in `aidlc-state.md`: STOP. Do not overwrite. Warn the user that overwriting will lose unfinished work and ask them to choose: **Resume** the prior task, or **Restart** (explicit confirmation required, per the Restart Request recovery procedure).
-     2. Otherwise (prior task complete, or no prior file): overwrite directly with the new task's questions.
+   - Create `aidlc-docs/inception/requirements/requirements-questions.md` only when the request has genuine ambiguity that would lead to wrong implementation direction. For clear, specific requests, proceed directly to generating the requirements document.
+   - **MANDATORY — Archive before create**: ALWAYS follow this sequence before writing a new questions file:
+     1. Read `aidlc-state.md` to get the prior project name (used to derive the archive slug: lowercase, spaces → hyphens, strip special characters).
+     2. If `aidlc-docs/inception/requirements/requirements-questions.md` already exists:
+        - If the prior task is **not marked complete** in `aidlc-state.md`: STOP. Warn the user that starting a new task will archive and close the prior one. Ask them to choose: **Resume** the prior task, or **Start New Task** (explicit confirmation required before archiving).
+        - Read the existing file, then write its contents to `aidlc-docs/inception/requirements/requirements-questions.{prior-project-slug}.archived.md`.
+        - Then create the new `requirements-questions.md` for the current task.
+     3. If no prior file exists: create `requirements-questions.md` directly.
      Regardless, all question text MUST be captured verbatim in `audit.md` (see Step 9) — `audit.md` is append-only and is the single durable historical record.
    - Ask questions about ANY missing, unclear, or ambiguous areas
    - Focus on functional requirements, non-functional requirements, user scenarios, and business context
@@ -106,7 +110,11 @@ Evaluate these areas, focusing on those most relevant to the request. For clear 
    - Analyze answers. If critical ambiguity remains that would affect architecture or core functionality, ask up to 3 targeted follow-up questions in the same file. Then proceed.
 
 ### Step 7: Generate Requirements Document
-   - Create `aidlc-docs/inception/requirements/requirements.md`
+   - **MANDATORY — Archive before create**: ALWAYS follow this sequence before writing a new requirements document:
+     1. If `aidlc-docs/inception/requirements/requirements.md` already exists:
+        - Read the existing file, then write its contents to `aidlc-docs/inception/requirements/requirements.{prior-project-slug}.archived.md` (same slug derived in Step 6).
+        - Then create the new `requirements.md` for the current task.
+     2. If no prior file exists: create `requirements.md` directly.
    - Include intent analysis summary at the top:
      - User request
      - Request type
@@ -130,12 +138,12 @@ Update `aidlc-docs/aidlc-state.md`:
 
 ### Step 9: Log and Proceed
    - Log approval prompt with timestamp in `aidlc-docs/audit.md`
-   - **MANDATORY — Self-contained Q&A logging**: When clarifying questions were used (Step 6), the audit entry for the answers MUST include the **full text of every question** alongside the user's answer (and any presented multiple-choice options). Do NOT log answers alone (e.g. "Q1: 4"). Reason: `requirements-questions.md` is overwritten when a new task starts, so the audit log is the only durable record of what was asked.
+   - **MANDATORY — Self-contained Q&A logging**: When clarifying questions were used (Step 6), the audit entry for the answers MUST include the **full text of every question** alongside the user's answer (and any presented multiple-choice options). Do NOT log answers alone (e.g. "Q1: 4"). Reason: although `requirements-questions.md` is archived (not deleted) when a new task starts, the audit log is the canonical durable record — archive files may be cleaned up over time.
    - Suggested format:
 ```markdown
 ## Requirements Analysis — User Answers Received
 **Timestamp**: [ISO timestamp]
-**Questions & Answers** (full Q text retained because `requirements-questions.md` is overwritten on each new task):
+**Questions & Answers** (full Q text retained; `requirements-questions.md` is archived on each new task):
 
 - **Q1**: [Full question text]
   - 1) [Option 1 text]
